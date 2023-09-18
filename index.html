@@ -129,10 +129,16 @@
                     </div>
                 </div>
             </div>
-            <button>
+            <button onclick="descargarPDF()">
                 Descargar CV <i class="fa-solid fa-download"></i>
                 <span class="overlay"></span>
             </button>
+            <script>
+                function descargarPDF() {
+                    var nombreArchivo = 'DanielHernandezCV.pdf';
+                    window.location.href = nombreArchivo;
+                }
+                </script>
         </div>
     </section>
 
@@ -471,8 +477,19 @@
     </footer>
     
     <script>
-        require('dotenv').config();
-        const sendGridApiKey = process.env.SENDGRID_API_KEY;
+     const express = require('express');
+const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
+
+app.get('/', (req, res) => {
+  const envData = {
+    SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
+
+  };
+
+  res.render('index', { envData });
+});
 
         document.querySelector("#formularioContacto").addEventListener("submit", function (event) {
             event.preventDefault(); // Evita el comportamiento predeterminado del formulario
