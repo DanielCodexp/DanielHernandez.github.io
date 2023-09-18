@@ -438,37 +438,18 @@
             <div class="fila">
                 <!-- Formulario -->
                 <div class="col">
-                    <input type="text" placeholder="Tú Nombre" />
-                    <input type="text" placeholder="Número telefónico" />
-                    <input type="text" placeholder="Dirección de correo" />
-                    <input type="text" placeholder="Tema" />
-                    <textarea name="" id="" cols="30" rows="10" placeholder="Mensaje"></textarea>
-                    <button>
-                        Enviar Mensaje<i class="fa-solid fa-paper-plane"></i>
-                        <span class="overlay"></span>
-                    </button>
+                    <form id="formularioContacto">
+                        <input type="text" name="nombre" placeholder="Tú Nombre" />
+                        <input type="text" name="telefono" placeholder="Número telefónico" />
+                        <input type="text" name="correo" placeholder="Dirección de correo" />
+                        <input type="text" name="tema" placeholder="Tema" />
+                        <textarea name="mensaje" cols="30" rows="10" placeholder="Mensaje"></textarea>
+                        <button type="submit">
+                            Enviar Mensaje<i class="fa-solid fa-paper-plane"></i>
+                            <span class="overlay"></span>
+                        </button>
+                    </form>
                 </div>
-                <!-- Mapa -->
-                <div class="col">
-                    <img src="img/ubicacion.png" alt="" />
-                    <div class="info">
-                        <ul>
-                            <li>
-                                <i class="fa-solid fa-location-dot"></i>
-                                Córdoba, Veracruz
-                            </li>
-                            <li>
-                                <i class="fa-solid fa-mobile-screen"></i>
-                                Llamame: +52 271 124 5170
-                            </li>
-                            <li>
-                                <i class="fa-solid fa-envelope"></i>
-                                Email: angeldanielcode@gmail.com
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -488,6 +469,54 @@
                 <i class="fa-brands fa-github redes cursor"></i></a>
         </div>
     </footer>
+    
+    <script>
+        //require('dotenv').config();
+        const sendGridApiKey ='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';
+
+        document.querySelector("#formularioContacto").addEventListener("submit", function (event) {
+            event.preventDefault(); // Evita el comportamiento predeterminado del formulario
+
+            const nombre = document.querySelector('input[name="nombre"]').value;
+            const telefono = document.querySelector('input[name="telefono"]').value;
+            const correo = document.querySelector('input[name="correo"]').value;
+            const tema = document.querySelector('input[name="tema"]').value;
+            const mensaje = document.querySelector('textarea[name="mensaje"]').value;
+
+            enviarCorreo(nombre, telefono, correo, tema, mensaje);
+        });
+
+        function enviarCorreo(nombre, telefono, correo, tema, mensaje) {
+            fetch("https://api.sendgrid.com/v3/mail/send", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${sendGridApiKey}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    personalizations: [
+                        {
+                            to: [{ email: "angeldanielcode@gmail.com" }], // Reemplaza con el correo del destinatario
+                            subject: tema,
+                        },
+                    ],
+                    from: { email: correo },
+                    content: [{ type: "text/plain", value: mensaje }],
+                }),
+            })
+            .then((response) => {
+                if (response.status === 202) {
+                    alert("Correo enviado con éxito");
+                    // Redirige al usuario a una página de confirmación u otra acción después de enviar el correo.
+                } else {
+                    alert("Error al enviar el correo");
+                }
+            })
+            .catch((error) => {
+                console.error("Error al enviar el correo:", error);
+            });
+        }
+    </script>
 
     <script src="script.js"></script>
 </body>
