@@ -471,8 +471,8 @@
     </footer>
     
     <script>
-        //require('dotenv').config();
-        const sendGridApiKey ='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';
+        require('dotenv').config();
+        const sendGridApiKey = process.env.SENDGRID_API_KEY;
 
         document.querySelector("#formularioContacto").addEventListener("submit", function (event) {
             event.preventDefault(); // Evita el comportamiento predeterminado del formulario
